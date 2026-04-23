@@ -1,0 +1,21 @@
+# VSCode
+.vscode/
+.idea/
+
+/anotacoes
+
+
+# Cache de navegadores
+.cache/
+*.local
+
+# Logs
+*.log
+
+# Arquivos temporários
+*.tmp
+*.swp
+
+# Sistema operacional
+.DS_Store
+Thumbs.db

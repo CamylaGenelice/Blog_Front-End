@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cadastro de Usuário</title>
+    <link rel="stylesheet" href="/static/style_cadastro.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Criar Conta</h1>
+        
+        <form id="formCadastro">
+            <div class="form-group">
+                <label for="nome">Nome *</label>
+                <input 
+                    type="text" 
+                    id="nome" 
+                    name="nome" 
+                    required 
+                    placeholder="Digite seu nome"
+                >
+            </div>
+
+            <div class="form-group">
+                <label for="email">E-mail *</label>
+                <input 
+                    type="email" 
+                    id="email" 
+                    name="email" 
+                    required 
+                    placeholder="seu@email.com"
+                >
+            </div>
+
+            <div class="form-group">
+                <label for="senha">Senha *</label>
+                <input 
+                    type="password" 
+                    id="senha" 
+                    name="senha" 
+                    required 
+                    placeholder="Mínimo 8 caracteres"
+                    minlength="8"
+                >
+            </div>
+
+            <div class="form-group">
+                <label for="confirmarSenha">Confirmar Senha *</label>
+                <input 
+                    type="password" 
+                    id="confirmarSenha" 
+                    name="confirmarSenha" 
+                    required 
+                    placeholder="Digite a senha novamente"
+                >
+            </div>
+
+            <button type="submit" id="btnCadastrar">
+                Cadastrar
+            </button>
+        </form>
+
+        <div id="mensagem" class="mensagem"></div>
+
+        <div class="login-link">
+            Já tem uma conta? <a href="./login.html">Faça login</a>
+        </div>
+    </div>
+
+    <script src="config.js"></script>
+    <script src="auth.js"></script>
+    <script src="/services/ui/authUI.js">
+        
+    </script>
+</body>
+</html>

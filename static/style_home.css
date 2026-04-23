@@ -1,0 +1,116 @@
+/* Pequenos ajustes personalizados */
+.card-img-top {
+    height: 200px;
+    object-fit: cover;
+}
+
+.social-icon {
+    font-size: 1.5rem;
+    margin-right: 15px;
+    color: #6c757d;
+    transition: color 0.3s;
+}
+
+.social-icon:hover {
+    color: #0d6efd;
+}
+
+.hero-section {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    padding: 60px 0;
+    border-radius: 0 0 20px 20px;
+}
+
+.loading {
+    display: none;
+    text-align: center;
+    padding: 50px;
+}
+
+.error-message {
+    display: none;
+    background-color: #f8d7da;
+    color: #721c24;
+    padding: 15px;
+    border-radius: 8px;
+    margin: 20px 0;
+}
+
+.post-content {
+    line-height: 1.8;
+}
+
+.post-date {
+    color: #6c757d;
+    font-size: 0.9rem;
+    margin-bottom: 20px;
+}
+
+/* --- ESTILOS DO EDITOR --- */
+
+/* 
+   IMPORTANTE: As classes abaixo (.editor-toolbar e .editor-content) 
+   podem ser removidas se fores usar APENAS o TinyMCE, 
+   pois ele cria a sua própria interface. 
+*/
+
+
+.editor-content:focus {
+    outline: none;
+    border-color: #667eea;
+    box-shadow: 0 0 0 0.2rem rgba(102, 126, 234, 0.25);
+}
+
+.font-select, .size-select, .color-select {
+    padding: 5px;
+    border-radius: 4px;
+    border: 1px solid #dee2e6;
+    font-size: 14px;
+}
+
+.preview-card {
+    position: sticky;
+    top: 100px;
+}
+
+.toast-container {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    z-index: 1050;
+}
+
+.char-count {
+    font-size: 12px;
+    color: #6c757d;
+    text-align: right;
+    margin-top: 5px;
+}
+
+/* --- SOLUÇÃO PARA O TINYMCE --- */
+
+/* Força o container do TinyMCE a ocupar 100% da largura do card */
+.tox-tinymce {
+    width: 100% !important;
+    border-radius: 8px !important;
+}
+
+/* Garante que o campo original (textarea) também tenha largura total antes de carregar */
+#editor {
+    width: 100% !important;
+    min-height: 400px;
+}
+
+@media (max-width: 768px) {
+    .editor-toolbar {
+        position: relative;
+        top: 0;
+    }
+
+    .preview-card {
+        position: relative;
+        top: 0;
+        margin-top: 20px;
+    }
+}
