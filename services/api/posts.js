@@ -1,4 +1,4 @@
-import {isAdmin} from "./auth";
+import {isAdmin} from "./auth.js";
 
 const CONFIG = {
     API_BASE_URL: 'http://localhost:8000',  // Altere para a URL do seu backend
@@ -6,18 +6,19 @@ const CONFIG = {
     MAX_RECENT_POSTS: 5, 
 }
 
-async function getPosts() {
+export async function getPosts() {
     try {
         const response = await fetch(`${CONFIG.API_BASE_URL}/post/posts`,{
             method: 'GET',
             headers: {'Content-Type': 'application/json'}
         })
 
-        if (!response){
+        if (!response.ok){
             throw new Error(`Erro HTTP: ${response.status} - ${response.statusText}`);
         }
         const posts = await response.json()
-        return {'post': posts}
+        
+        return posts
 
     } catch (error) {
         console.error('Erro ao buscar todos os posts')
@@ -25,12 +26,12 @@ async function getPosts() {
     }
 }
 
-async function getPostName(nome) {
+export async function getPostName(nome) {
     try {
-        const resposta = await fetch(`${CONFIG.API_BASE_URL}/post/pesquisar_post`, {
+        const resposta = await fetch(`${CONFIG.API_BASE_URL}/post/pesquisar_post?titulo=${encodeURIComponent(nome)}`, {
             method: 'GET',
             headers: {'Content-Type': 'application/json'},
-            body: JSON.stringify(nome)
+            
 
         })
         if (!resposta.ok){
@@ -47,7 +48,7 @@ async function getPostName(nome) {
         throw error
     }
 }
-async function getPostId(id) {
+export async function getPostId(id) {
     try {
 
         const post_id = id || new URLSearchParams(window.location.search).get('id')
@@ -57,9 +58,10 @@ async function getPostId(id) {
         }
 
 
-        const resposta = await fetch(`${CONFIG.API_BASE_URL}/post/${post_id}`, {
-            method: 'GET',
+        const resposta = await fetch(`${CONFIG.API_BASE_URL}/post/${id}`, {
+            method: 'POST',
             headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify(id)
 
         })
         if (!resposta.ok){
@@ -76,7 +78,7 @@ async function getPostId(id) {
     }
 }
 
-async function createPost(titulo, conteudo) {
+export async function createPost(titulo, conteudo) {
     try {
         const admin = isAdmin()
         if (!admin){
@@ -89,7 +91,7 @@ async function createPost(titulo, conteudo) {
                 'Content-Type': 'application/json',     
             },
             credentials: 'include', 
-            body: JSON.stringify(dadosUsuario)
+            body: JSON.stringify({titulo,conteudo})
         });
         // Captura o erro do servidor
         if (!requisicao.ok) {
@@ -105,7 +107,7 @@ async function createPost(titulo, conteudo) {
     }
 }
 
-async function editPost(titulo,texto) {
+export async function editPost(titulo,texto) {
     try {
 
         const params = new URLSearchParams(window.location.search)
@@ -138,7 +140,7 @@ async function editPost(titulo,texto) {
     }
 }
 
-async function deletePost() {
+export async function deletePost() {
     try {
         const params = new URLSearchParams(window.location.search)
         const post_id = params.get('id')

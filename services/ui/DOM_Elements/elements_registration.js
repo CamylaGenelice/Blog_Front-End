@@ -5,13 +5,20 @@ const btnCadastrar = document.getElementById('btnCadastrar')
 const mensagemDiv = document.getElementById('mensagem')
 
 export function exibirMensagem(texto,tipo) {
-    mensagemDiv.textContent = texto
-    mensagemDiv.className = `mensagem ${tipo}`
+    const mensagem = document.getElementById('mensagem')
 
-    setTimeout(() => {
-        mensagemDiv.className = 'mensagem'
-        mensagemDiv.textContent = ''
-    }, 5000)
+    if(!mensagem){
+        console.warn('Elemento mensagem não encontrado')
+        return
+    }
+
+  mensagem.textContent = texto
+  mensagem.className = tipo === 'erro' ? 'alert alert-danger' : 'alert alert-success'
+  mensagem.style.display = 'block'
+
+  setTimeout(() => {
+    mensagem.style.display = 'none'
+  }, 3000)
 }
 
 export function limparFormulario() {

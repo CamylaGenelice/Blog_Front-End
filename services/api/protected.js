@@ -1,4 +1,4 @@
-import { isAuthenticated, getUserRole } from "./auth";
+import { isAuthenticated, getUserRole } from "./auth.js";
 
 function checkAccess() {
     const publicPages = ['login.html', 'home.html'];

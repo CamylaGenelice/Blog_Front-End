@@ -1,0 +1,78 @@
+   /* Fundo Animado com Movimento */
+    body {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            /* Gradiente linear grande para permitir o movimento */
+            background: linear-gradient(45deg, #1a1a1a, #333333, #ffffff20, #1a1a1a);
+            background-size: 400% 400%;
+            animation: movimentoGalatico 15s ease infinite;
+            overflow: hidden;
+    }
+
+    @keyframes movimentoGalatico {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+    }
+
+        /* Card do Formulário Branco */
+    .login-card {
+            background-color: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 3rem;
+            width: 100%;
+            max-width: 420px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.5);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+    }
+
+    .brand-logo {
+            font-size: 2.5rem;
+            font-weight: 800;
+            color: #212529;
+            text-align: center;
+            display: block;
+            text-decoration: none;
+            margin-bottom: 0.5rem;
+    }
+
+    .form-label {
+            color: #495057;
+            font-weight: 600;
+    }
+
+    .btn-dark {
+            padding: 0.8rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            border-radius: 10px;
+            transition: all 0.3s;
+    }
+
+    .btn-dark:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+    }
+
+    .input-group-text {
+            background-color: #f8f9fa;
+            border-right: none;
+    }
+
+    .form-control {
+            border-left: none;
+            background-color: #f8f9fa;
+    }
+
+    .form-control:focus {
+            background-color: #ffffff;
+            box-shadow: none;
+            border-color: #dee2e6;
+    }

@@ -1,11 +1,18 @@
 import {createPost, getPosts, getPostName, getPostId} from '../api/posts.js'
-import {checkAuthStatus} from '../api/auth.js'
-import {getComment, createComment} from '../api/comments.js'
+import {checkAuthStatus, isAdmin, fetchUserProfile, initAuth} from '../api/auth.js'
+import {getComment, createComment, deleteComment, editComment} from '../api/comments.js'
 import { exibirMensagem } from './DOM_Elements/elements_registration.js';
 
 const postForm = document.getElementById('postForm')
 
-postForm.addEventListener('submit', async (event) => {
+//* tornando a função global para o navegador encontrar
+window.verPostUnico = verPostUnico 
+window.voltarParaLista = voltarParaLista
+window.deleteComentario = deleteComentario
+document.addEventListener('DOMContentLoaded', inicializarPagina)
+
+if(postForm){
+    postForm.addEventListener('submit', async (event) => {
     event.preventDefault();
 
 
@@ -53,6 +60,7 @@ postForm.addEventListener('submit', async (event) => {
     }
     
 });
+}
 
 // Validação visual do Bootstrap 
 (function() {
@@ -83,11 +91,11 @@ async function exibirPosts(){
     try {
         // Mostra indicador de carregamento
         container.innerHTML = 
-        <div class="text-center">
+        `<div class="text-center">
                 <div class="spinner-border" role="status">
                     <span class="visually-hidden">Carregando...</span>
                 </div>
-        </div>
+        </div> `
 
         const resultado = await getPosts()
         const posts = resultado.post || resultado
@@ -222,6 +230,9 @@ barraPesquisa.addEventListener('submit', async (event) => {
 // ************** Pegar um post pelo id ****************
 // 1. Função que decide o que mostrar ao carregar a página
 async function inicializarPagina() {
+
+    await initAuth()
+
     const params = new URLSearchParams(window.location.search)
     const post_id = params.get('id')
 
@@ -236,19 +247,20 @@ async function inicializarPagina() {
 
 async function verPostUnico(id) {
     const containerLista = document.getElementById('posts-container-wrapper');
-    const containerDetalhe = document.getElementById('post-detalhe');
+    const containerDetalhe = document.getElementById('post-detalhado');
     const conteudoDiv = document.getElementById('conteudo-do-post');
     
     try {
         // Esconde a lista, mostra o container de detalhes
-        document.getElementById('posts-container-wrapper').classList.add('d-none')
-        document.getElementById('post-detalhe').classList.remove('d-none')
+        containerLista.classList.add('d-none')
+        containerDetalhe.classList.remove('d-none')
+        
 
         conteudoDiv.innerHTML = '<div class="spinner-border"></div>';
 
         
         const post = await getPostId(id)
-        const conteudoDiv = document.getElementById('conteudo-do-post')
+        
 
         // 3. Renderiza o conteúdo completo
         conteudoDiv.innerHTML = `
@@ -271,33 +283,61 @@ async function verPostUnico(id) {
    
 }
 
-// Função para resetar a visão
+//* Função para resetar a visão dos posts
 function voltarParaLista() {
-    document.getElementById('posts-container-wrapper').classList.remove('d-none');
-    document.getElementById('post-detalhe').classList.add('d-none');
+    const containerLista = document.getElementById('posts-container-wrapper');
+    const containerDetalhe = document.getElementById('post-detalhado');
+
+    containerLista.classList.remove('d-none')
+    containerDetalhe.classList.add('d-none')
+    
 }
 
 // ************** Exibição dos comentários do post ****************
 async function carregarComentarios(post_id) {
+
     const lista = document.getElementById('lista-comentarios')
     lista.innerHTML = '<div class="spinner-border spinner-border-sm"></div> Carregando comentários...'
 
     try {
-        const comentarios = await getComment(post_id)
+
+        await initAuth()
+        const usuarioLogado = await checkAuthStatus()
+        
+        const resposta = await getComment(post_id)
+        const comentarios = resposta.content ?? []
 
         if(!comentarios || comentarios.length === 0){
             lista.innerHTML = '<p class="text-muted">Nenhum comentário ainda. Seja o primeiro a comentar!</p>';
             return;
         }
-        lista.innerHTML = comentarios.map( coment => `<div class="card mb-2 border-0 bg-light">
-                <div class="card-body p-3">
-                    <div class="d-flex justify-content-between">
-                        <strong>${escapeHtml(com.autor_nome || 'Usuário')}</strong>
-                        <small class="text-muted">${new Date(com.created_at).toLocaleDateString()}</small>
+        lista.innerHTML = comentarios.map( coment => {
+            const usuarioEhAdmin = isAdmin()
+            const conversaoInt = parseInt(usuarioLogado.objeto.id)
+            const usuarioEhDono = usuarioLogado && conversaoInt === coment.id_usuario
+
+            let botaoDeletar = ''
+
+            if(usuarioEhAdmin || usuarioEhDono){
+                botaoDeletar = `
+                <button class="btn btn-sm text-danger" onclick="deleteComentario('${coment.id}', '${coment.post_id}')">
+                    <i class="bi bi-trash"></i> Deletar
+                </button>`
+            }
+
+            return `
+                <div class="card mb-2 bg-light border-0">
+                    <div class="card-body p-3">
+                        <div class="d-flex justify-content-between">
+                            <strong>${coment.nome_usuario}</strong>
+                            ${botaoDeletar}
+                        </div>
+                        <p class="mb-0">${coment.texto}</p>
                     </div>
-                    <p class="mb-0 mt-1">${escapeHtml(com.texto)}</p>
                 </div>
-            </div>`).join('')
+            `;
+       
+        }).join('')
     } 
     catch (error) {
         console.error('Erro na função de carregamento de comentários: ',error)
@@ -305,7 +345,9 @@ async function carregarComentarios(post_id) {
     }
 }
 
+// Função de formulario para criar um comentário
 async function configurarFormularioComentario(postId) {
+
     const container = document.getElementById('formulario-comentario-container')
     const resposta = await checkAuthStatus()
 
@@ -328,7 +370,7 @@ async function configurarFormularioComentario(postId) {
 
     document.getElementById('formNovoComentario').addEventListener('submit', async(e) => {
         e.preventDefault()
-        const texto = document.getElementById('textoComentario').value = ''
+        const texto = document.getElementById('textoComentario').value
 
         try {
             await createComment(texto,postId)
@@ -342,3 +384,21 @@ async function configurarFormularioComentario(postId) {
         }
     })
 }
+
+async function deleteComentario(comentarioId, postId) {
+
+    try {
+        const mensagem = document.getElementById('mensagem')
+        const resposta = await deleteComment(comentarioId,postId)
+        if(!resposta){
+            mensagem.innerHTML = '<p class="text-danger">Erro ao deletar comentário.</p>'
+        }
+        await carregarComentarios(postId)
+
+    } catch (error) {
+        console.error('Erro ao deletar comentário: ',error)
+        
+    }
+
+}
+

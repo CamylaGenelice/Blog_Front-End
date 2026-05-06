@@ -3,75 +3,149 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Cadastro de Usuário</title>
-    <link rel="stylesheet" href="/static/style_cadastro.css">
+    <title>Criar Conta - BlogDev</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
+    
+    <style>
+        /* Fundo Animado com Movimento (Igual ao Login) */
+        body {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(45deg, #1a1a1a, #333333, #ffffff20, #1a1a1a);
+            background-size: 400% 400%;
+            animation: movimentoGalatico 15s ease infinite;
+            padding: 20px; /* Espaço para telas pequenas */
+        }
+
+        @keyframes movimentoGalatico {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        /* Card do Formulário Branco */
+        .register-card {
+            background-color: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 2.5rem;
+            width: 100%;
+            max-width: 500px; /* Um pouco mais largo que o login para acomodar mais campos */
+            box-shadow: 0 15px 35px rgba(0,0,0,0.5);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+
+        .brand-logo {
+            font-size: 2.2rem;
+            font-weight: 800;
+            color: #212529;
+            text-align: center;
+            display: block;
+            text-decoration: none;
+            margin-bottom: 0.5rem;
+        }
+
+        .form-label {
+            color: #495057;
+            font-weight: 600;
+            margin-bottom: 0.3rem;
+        }
+
+        .btn-dark {
+            padding: 0.8rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            border-radius: 10px;
+            transition: all 0.3s;
+        }
+
+        .btn-dark:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+        }
+
+        .input-group-text {
+            background-color: #f8f9fa;
+            border-right: none;
+        }
+
+        .form-control {
+            border-left: none;
+            background-color: #f8f9fa;
+        }
+
+        .form-control:focus {
+            background-color: #ffffff;
+            box-shadow: none;
+            border-color: #dee2e6;
+        }
+
+        .login-link-text {
+            margin-top: 1.5rem;
+            text-align: center;
+        }
+    </style>
 </head>
 <body>
-    <div class="container">
-        <h1>Criar Conta</h1>
+
+    <div class="register-card">
+        <a class="brand-logo">BlogDev</a>
+        <p class="text-center text-muted mb-4">Crie sua conta </p>
         
         <form id="formCadastro">
-            <div class="form-group">
-                <label for="nome">Nome *</label>
-                <input 
-                    type="text" 
-                    id="nome" 
-                    name="nome" 
-                    required 
-                    placeholder="Digite seu nome"
-                >
+            <div class="mb-3">
+                <label for="nome" class="form-label">Nome Completo</label>
+                <div class="input-group">
+                    <span class="input-group-text"><i class="bi bi-person"></i></span>
+                    <input type="text" class="form-control" id="nome" name="nome" placeholder="Seu nome" required>
+                </div>
             </div>
 
-            <div class="form-group">
-                <label for="email">E-mail *</label>
-                <input 
-                    type="email" 
-                    id="email" 
-                    name="email" 
-                    required 
-                    placeholder="seu@email.com"
-                >
+            <div class="mb-3">
+                <label for="email" class="form-label">E-mail</label>
+                <div class="input-group">
+                    <span class="input-group-text"><i class="bi bi-envelope"></i></span>
+                    <input type="email" class="form-control" id="email" name="email" placeholder="seu@email.com" required>
+                </div>
+            </div>
+            
+            <div class="mb-3">
+                <label for="senha" class="form-label">Senha</label>
+                <div class="input-group">
+                    <span class="input-group-text"><i class="bi bi-lock"></i></span>
+                    <input type="password" class="form-control" id="senha" name="senha" placeholder="Mínimo 8 caracteres" minlength="8" required>
+                </div>
             </div>
 
-            <div class="form-group">
-                <label for="senha">Senha *</label>
-                <input 
-                    type="password" 
-                    id="senha" 
-                    name="senha" 
-                    required 
-                    placeholder="Mínimo 8 caracteres"
-                    minlength="8"
-                >
+            <div class="mb-4">
+                <label for="confirmarSenha" class="form-label">Confirmar Senha</label>
+                <div class="input-group">
+                    <span class="input-group-text"><i class="bi bi-shield-check"></i></span>
+                    <input type="password" class="form-control" id="confirmarSenha" name="confirmarSenha" placeholder="Repita a senha" required>
+                </div>
             </div>
 
-            <div class="form-group">
-                <label for="confirmarSenha">Confirmar Senha *</label>
-                <input 
-                    type="password" 
-                    id="confirmarSenha" 
-                    name="confirmarSenha" 
-                    required 
-                    placeholder="Digite a senha novamente"
-                >
-            </div>
-
-            <button type="submit" id="btnCadastrar">
+            <button type="submit" id="btnCadastrar" class="btn btn-dark w-100 mb-2">
                 Cadastrar
             </button>
+            
+            <div id="mensagem" class="text-center small mt-2"></div>
+
+            <div class="login-link-text">
+                <span class="small text-muted">Já tem uma conta?</span>
+                <a href="./login.html" class="small fw-bold text-dark text-decoration-none">Faça login</a>
+            </div>
         </form>
-
-        <div id="mensagem" class="mensagem"></div>
-
-        <div class="login-link">
-            Já tem uma conta? <a href="./login.html">Faça login</a>
-        </div>
     </div>
 
-    <script src="config.js"></script>
-    <script src="auth.js"></script>
-    <script src="/services/ui/authUI.js">
-        
-    </script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script type="module" src="/services/ui/authUI.js"></script>
 </body>
 </html>

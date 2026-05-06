@@ -1,7 +1,7 @@
-import { isAdmin, checkAuthStatus } from "./auth"
+import { isAdmin, checkAuthStatus } from "./auth.js"
 
 const CONFIG = {
-    API_BASE_URL: 'http://localhost:8000',  // Altere para a URL do seu backend
+    API_BASE_URL: 'http://127.0.0.1:8000',  // Altere para a URL do seu backend
     POST_ID_TO_DISPLAY: 4,                  // ID do post que será exibido na home
     MAX_RECENT_POSTS: 5, 
 }
@@ -15,7 +15,7 @@ export async function createComment(texto,post_id) {
             throw new Error('Usuario não esta autenticado ')
         }
         
-        const requisicao = await fetch (`${CONFIG.API_BASE_URL}post/${post_id}/comments/`,{
+        const requisicao = await fetch (`${CONFIG.API_BASE_URL}/comments/posts/${post_id}/comments/`,{
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -40,28 +40,28 @@ export async function createComment(texto,post_id) {
     }
 }
 
-export async function deleteComment(id) {
+export async function deleteComment(comment_id, post_id) {
     try {
         const status = await checkAuthStatus()
         
         if(!status){
             throw new Error('Usuario não esta autenticado ')
         }
-        const formData = FormData()
-        formData.append('id',id)
+        
 
-        const requisicao = await fetch (`${CONFIG.API_BASE_URL}/comments/delete`,{
+        const requisicao = await fetch (`${CONFIG.API_BASE_URL}/comments/comments/${comment_id}?post_id=${post_id}`,{
             method: 'DELETE',
             headers: {
                 'Content-Type': 'application/json'
             },
             credentials: 'include',
-            body: JSON.stringify(formData)
+            
         })
         if (!requisicao.ok){
             const erro = await requisicao.json()
             throw new Error (`Erro: ${JSON.stringify(erro)}`)
         }
+        return true
     }
     catch (error) {
         console.error('Erro ao deletar comentario: ',error)
@@ -111,10 +111,9 @@ export async function getComment(post_id) {
             throw new Error('Usuario não autenticado')
         }
 
-        const formData = FormData()
-        formData.append('id',id)
+        
 
-        const requisicao = await fetch (`${CONFIG.API_BASE_URL}/posts/${post_id}/comments`,{
+        const requisicao = await fetch (`${CONFIG.API_BASE_URL}/comments/posts/${post_id}/comments`,{
             method: 'GET',
             headers: {'Content-Type': 'application/json'},
             credentials: 'include',
@@ -130,7 +129,7 @@ export async function getComment(post_id) {
         return comentarios
     } 
     catch (error) {
-        console.error('Erro ao buscar comentario ',error)
+        console.error('Erro ao buscar comentarios ',error)
         throw error
     }
 }

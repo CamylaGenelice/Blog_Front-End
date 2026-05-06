@@ -1,22 +1,51 @@
 const CONFIG = {
-    API_BASE_URL: 'http://localhost:8000',  // Altere para a URL do seu backend
+    API_BASE_URL: 'http://127.0.0.1:8000',  // Altere para a URL do seu backend
     POST_ID_TO_DISPLAY: 4,                  // ID do post que será exibido na home
     MAX_RECENT_POSTS: 5, 
 }
 
 let userCache = null
+let authInitialized = false
+
+export async function initAuth() {
+    if(authInitialized) return userCache
+
+    try {
+        const res = await fetch(`${CONFIG.API_BASE_URL}/auth/me`, {
+            method: 'GET',
+            credentials: 'include'
+        });
+
+        if(!res.ok){
+            userCache = null
+        }
+        else{
+            userCache = await res.json();
+            console.log(userCache)
+        }
+    } 
+    catch (error) {
+        userCache = null;
+        console.error('Erro na função initAuth: ',error)
+    }
+    authInitialized = true;
+    return userCache;
+}
 
 export async function loginUser(username, password) {
     try {
 
-        const formData = new FormData()
-        formData.append('username',username)
-        formData.append('password',password)
+       const formData = new URLSearchParams();
+       formData.append('grant_type', 'password');
+       formData.append('username', username);
+       formData.append('password', password);
 
         const resposta = await fetch(`${CONFIG.API_BASE_URL}/auth/login`, {
             method: 'POST',
-            body: formData,  // Permite que o navegador receba e armazene o cookie
-            credentials: 'include'
+            headers:  {'Content-Type': 'application/x-www-form-urlencoded'},
+            body: formData, 
+            credentials: 'include',
+            
          })
             
 
@@ -24,26 +53,29 @@ export async function loginUser(username, password) {
             const erro = await resposta.json()
             throw new Error (`Erro: ${JSON.stringify(erro)}`)
         }
+
+        
+
         return {'message':'Login realizado com sucesso', 'type': 'success'}
     
     }   
     
     catch (error) {
-        console.error('Erro ao fazer login:', error)
         throw error;
     }
+   
 }
 
 export async function registrationUser(nome,email,senha) {
     try {
-        const formData = new FormData()
-        formData.append('nome',nome)
-        formData.append('email',email)
-        formData.append('senha',senha)
+        const payload = {
+            nome, email, senha
+        }
         
         const requisicao = await fetch(`${CONFIG.API_BASE_URL}/auth/cadastro`, {
             method: 'POST',
-            body: formData,  // Permite que o navegador receba e armazene o cookie
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify(payload), 
             credentials: 'include'
          })
 
@@ -51,10 +83,10 @@ export async function registrationUser(nome,email,senha) {
             const erro = await requisicao.json()
             throw new Error (`Erro: ${JSON.stringify(erro)}`)
          }
-         return {'message':'Usuario criado com sucesso'}
+         return {'message':'Usuario criado com sucesso', type: 'success'}
     } 
     catch (error) {
-    
+        console.error('Catch: ',error)
         throw error
     }
 }
@@ -62,25 +94,14 @@ export async function registrationUser(nome,email,senha) {
 // Função para verificar se o usuário está autenticado
 export async function checkAuthStatus() {
     
-    try {
-        const resposta = await fetch(`${CONFIG.API_BASE_URL}/auth/me`,{
-            credentials: 'include'
-        })
-
-        if (resposta.ok){
-            userCache = await resposta.json()
-            return true
-    }
-        return false
-    }
-    catch (error) {
-        userCache = null
-        return false
-    }
+   if(!authInitialized){
+    await initAuth()
+   }
+   return userCache
     
 }
 
-// Função que roda assim que o site carrega, pegando as informações do usuario. Vai servir para personalizar os botões do site, se estiver logado pode fazer comentarios, se não estiver não aparece a opção
+// *Função que roda assim que o site carrega, pegando as informações do usuario. Vai servir para personalizar os botões do site, se estiver logado pode fazer comentarios, se não estiver não aparece a opção
 export async function fetchUserProfile() {
     try {
         const resposta = await fetch(`${CONFIG.API_BASE_URL}/auth/me`, {
@@ -90,7 +111,7 @@ export async function fetchUserProfile() {
 
         if (resposta.ok){
             const userData = await resposta.json()
-            localStorage.setItem('user_info', JSON.stringify(userData))
+            userCache = userData
             return userData
         }
         else{
@@ -111,10 +132,10 @@ export function isAuthenticated() {
  * Função auxiliar para verificar se o usuário é um Administrador 
  */
 export function isAdmin() {
-    if (userCache.role_id !== 2 || !userCache){
+    if (!userCache){
         return false
     }
-    return true
+    return userCache.role_id === 2
 }
 
 export async function logout(){

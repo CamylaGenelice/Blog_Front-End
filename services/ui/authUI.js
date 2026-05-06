@@ -1,28 +1,28 @@
-import { registrationUser, loginUser } from "../api/auth";
-import { exibirMensagem, validarCampos, limparFormulario, setLoading } from "./DOM_Elements/elements_registration";
+import { registrationUser, loginUser } from "../api/auth.js";
+import { exibirMensagem, validarCampos, limparFormulario, setLoading } from "./DOM_Elements/elements_registration.js";
 
 // Evento de submit do formulário
 
 const formCadastro = document.getElementById('formCadastro')
-const senhaInput = document.getElementById('senhaCadastro')
+const senhaInput = document.getElementById('senha')
 const confirmarSenhaInput = document.getElementById('confirmarSenha')
 
-
-formCadastro.addEventListener('submit', async (event) => {
+if( formCadastro) {
+    formCadastro.addEventListener('submit', async (event) => {
     event.preventDefault() // Impede o recarregamento da página
 
     const nome = document.getElementById('nome').value
-    const email = document.getElementById('email').value
-    const senha = document.getElementById('senha').value
+    const username = document.getElementById('email').value
+    const password = document.getElementById('senha').value
     const confirmarSenha = document.getElementById('confirmarSenha').value
 
-    if(!validarCampos(nome,email,senha,confirmarSenha)){
+    if(!validarCampos(nome,username,password,confirmarSenha)){
         return
     }
     setLoading(true)
 
     try {
-        const consult = await registrationUser(nome,email,senha)
+        const consult = await registrationUser(nome,username,password)
 
         if(!consult){
             exibirMensagem('Erro ao realizar cadastro, tente novamente!', 'erro')
@@ -30,11 +30,11 @@ formCadastro.addEventListener('submit', async (event) => {
 
         exibirMensagem('Cadastro realizado com sucesso! Redirecionando...', 'sucesso')
 
-        const loginResult = await loginUser(nome,senha)
+        const loginResult = await loginUser(username,password)
 
         if (loginResult.success) {
             
-            // Redireciona para o dashboard/página principal
+            //Redireciona para o dashboard/página principal
             setTimeout(() => {
                 window.location.href = '/home.html'
             }, 1500)
@@ -71,8 +71,11 @@ formCadastro.addEventListener('submit', async (event) => {
         setLoading(false)
     }
 })
+}
 
-confirmarSenhaInput.addEventListener('input', () => {
+if (confirmarSenhaInput && senhaInput){
+    
+    confirmarSenhaInput.addEventListener('input', () => {
     if(senhaInput.value !== confirmarSenhaInput.value){
         confirmarSenhaInput.style.borderColor = '#dc3545'
     }
@@ -81,7 +84,7 @@ confirmarSenhaInput.addEventListener('input', () => {
     }
 })
 
-senhaInput.addEventListener('input', () => {
+    senhaInput.addEventListener('input', () => {
     if(senhaInput.value && confirmarSenhaInput.value !== confirmarSenhaInput.value){
         confirmarSenhaInput.style.borderColor = '#dc3545'
     }
@@ -90,32 +93,8 @@ senhaInput.addEventListener('input', () => {
     }
 })
 
+}
+
 // Evento de submit do login
 
-const formLogin = document.getElementById('formLogin')
-
-
-formLogin.addEventListener('submit', async(event) =>{
-    event.preventDefault()
-
-    try {
-        const email = document.getElementById('email').value
-        const senha = document.getElementById('senhaLogin').value
-
-        const resposta = await loginUser(email,senha)
-
-        if (resposta.type == 'success'){
-            setTimeout(() => {
-                window.location.href = '/home.html'
-            },1500)
-        }
-        else{
-            exibirMensagem('Não foi possivel realizar o login.', 'erro')
-        }
-    } 
-    catch (error) {
-        console.error('Erro no login: ',error)
-        exibirMensagem('Erro ao tentar realizar login.','erro')
-    }
-})
 
