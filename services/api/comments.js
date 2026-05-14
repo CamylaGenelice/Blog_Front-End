@@ -105,14 +105,6 @@ export async function editComment(id, texto) {
 export async function getComment(post_id) {
     try {
         
-
-        const status = await checkAuthStatus()
-        if(!status){
-            throw new Error('Usuario não autenticado')
-        }
-
-        
-
         const requisicao = await fetch (`${CONFIG.API_BASE_URL}/comments/posts/${post_id}/comments`,{
             method: 'GET',
             headers: {'Content-Type': 'application/json'},
@@ -120,6 +112,10 @@ export async function getComment(post_id) {
             
 
         })
+        if (requisicao.status === 404) {
+            return { content: [] }; // retorna estrutura compatível com o esperado
+        }
+
         if(!requisicao.ok){
             const erro = await requisicao.json()
             throw new Error (`Erro: ${JSON.stringify(erro)}`)
