@@ -12,6 +12,36 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
 </head>
 <body class="bg-light py-5">
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <div class="container">
+            <a class="navbar-brand fw-bold" href="#">BlogDev</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav me-auto">
+                    <li class="nav-item">
+                        <a class="nav-link active" href="#">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="exibir_posts.html">Artigos</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="create_posts.html">Criar posts</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="login.html">Contato</a>
+                    </li>
+                </ul>
+                
+                <form class="d-flex" role="search">
+                    <input class="form-control me-2" type="search" placeholder="Pesquisar no blog..." aria-label="Search">
+                    <button class="btn btn-outline-light" type="submit">Buscar</button>
+                </form>
+            </div>
+        </div>
+    </nav>
     <main class="container">
         <div class="row justify-content-center">
             <div class="col-lg-10">
@@ -26,7 +56,7 @@
                 <div class="card shadow-sm border-0 rounded-4">
                     <div class="card-body p-4 p-md-5">
                         
-                        <!-- TAG FORM - Os dados serão enviados pelo seu script -->
+                        <!-- TAG FORM - Os dados serão enviados pelo script -->
                         <form id="postForm" class="needs-validation" novalidate>
                             
                             <!-- Campo Título -->
@@ -127,8 +157,8 @@
     </main>
 
     <!-- TinyMCE Script -->
-    <script src="https://cdn.tiny.cloud/1/hqa23x7fa1cromgdydl5f2ljfmwsncj3oi4t4b66a5nah4t2/tinymce/6/tinymce.min.js" referrerpolicy="origin"></script>
-    <script src="/services/ui/postUI.js"></script>
+    <script src="https://cdn.tiny.cloud/1/hqa23x7fa1cromgdydl5f2ljfmwsncj3oi4t4b66a5nah4t2/tinymce/6/tinymce.min.js" referrerpolicy="origin" ></script>
+    <script type="module" src="/services/ui/createPostUI.js"></script>
     
     <!-- Inicialização do TinyMCE (Configuração Básica) -->
     <script>

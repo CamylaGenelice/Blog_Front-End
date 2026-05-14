@@ -1,7 +1,7 @@
-import {isAdmin} from "./auth.js";
+import {isAdmin, checkAuthStatus, initAuth} from "./auth.js";
 
 const CONFIG = {
-    API_BASE_URL: 'http://localhost:8000',  // Altere para a URL do seu backend
+    API_BASE_URL: 'http://127.0.0.1:8000',  // Altere para a URL do seu backend
     POST_ID_TO_DISPLAY: 4,                  // ID do post que será exibido na home
     MAX_RECENT_POSTS: 5, 
 }
@@ -78,25 +78,27 @@ export async function getPostId(id) {
     }
 }
 
-export async function createPost(titulo, conteudo) {
+export async function createPost(titulo, texto) {
     try {
-        const admin = isAdmin()
-        if (!admin){
-            throw new Error('Admin é false')
+        const admin = await initAuth()
+        const role_id = admin?.objeto?.role_id
+
+        if(role_id !== 2){
+            throw new Error('Usuario não tem autorização')
         }
-        // Faz a requisição para o back-end
+        
         const requisicao = await fetch(`${CONFIG.API_BASE_URL}/post/criar_post`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',     
             },
+            body: JSON.stringify({titulo,texto}),
             credentials: 'include', 
-            body: JSON.stringify({titulo,conteudo})
         });
         // Captura o erro do servidor
         if (!requisicao.ok) {
             const erro = await requisicao.json()
-            throw new Error (`Erro: ${JSON.stringify(erro)}`);
+            throw new Error (JSON.stringify(erro));
         }
         const dadosConvertidos = await requisicao.json()
         return dadosConvertidos

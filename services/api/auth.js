@@ -21,7 +21,7 @@ export async function initAuth() {
         }
         else{
             userCache = await res.json();
-            console.log(userCache)
+            return userCache
         }
     } 
     catch (error) {
@@ -95,7 +95,7 @@ export async function registrationUser(nome,email,senha) {
 export async function checkAuthStatus() {
     
    if(!authInitialized){
-    await initAuth()
+    const res =  await initAuth()
    }
    return userCache
     
@@ -125,9 +125,6 @@ export async function fetchUserProfile() {
     }
 }
 
-export function isAuthenticated() {
-    
-}
 /**
  * Função auxiliar para verificar se o usuário é um Administrador 
  */
