@@ -2,6 +2,8 @@ import {createPost} from '../api/posts.js'
 import { initAuth, checkAuthStatus } from '../api/auth.js';
 import { exibirMensagem, limparFormulario } from './DOM_Elements/elements_registration.js';
 
+const postForm = document.getElementById('postForm')
+
 if(postForm){
     postForm.addEventListener('submit', async (event) => {
     event.preventDefault();
@@ -76,3 +78,18 @@ if(postForm){
         }, false);
     });
 })();
+
+// * Função que impede outros usuarios de acessar a página de criação de posts
+
+export async function protegerPaginaAdmin() {
+    const usuario = await initAuth()
+    const roleId = usuario?.objeto?.role_id
+
+    if( roleId !== 2){
+        return false
+    }
+    return true
+}
+
+protegerPaginaAdmin()
+

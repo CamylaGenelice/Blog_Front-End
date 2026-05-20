@@ -1,3 +1,4 @@
+import { protegerPaginaAdmin } from './createPostUI.js';
 import {createPost, getPosts, getPostName, getPostId} from '../api/posts.js'
 import {checkAuthStatus, isAdmin, fetchUserProfile, initAuth} from '../api/auth.js'
 import {getComment, createComment, deleteComment, editComment} from '../api/comments.js'
@@ -246,6 +247,9 @@ async function inicializarPagina() {
 }
 
 async function verPostUnico(id) {
+    
+    
+
     const containerLista = document.getElementById('posts-container-wrapper');
     const containerDetalhe = document.getElementById('post-detalhado');
     const conteudoDiv = document.getElementById('conteudo-do-post');

@@ -83,7 +83,7 @@ export async function createPost(titulo, texto) {
         const admin = await initAuth()
         const role_id = admin?.objeto?.role_id
 
-        if(role_id !== 2){
+        if(role_id !== 2 || !role_id){
             throw new Error('Usuario não tem autorização')
         }
         
