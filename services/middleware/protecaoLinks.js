@@ -1,14 +1,16 @@
-import { initAuth } from "../api/auth";
+import { initAuth } from "../api/auth.js";
 
 export async function isAdmin() {
     try {
         const usuario = await initAuth();
         const roleId = usuario?.objeto?.role_id;
+
         if(roleId === 2){
             return roleId
         }
         return false
-    } catch (error) {
+    } 
+    catch (error) {
         console.error('Erro ao verificar permissões:', error);
         return false;
     }

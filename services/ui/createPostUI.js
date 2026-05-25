@@ -1,3 +1,4 @@
+import { protegerPaginaAdmin } from '../middleware/protecaoLinks.js';
 import {createPost} from '../api/posts.js'
 import { initAuth, checkAuthStatus } from '../api/auth.js';
 import { exibirMensagem, limparFormulario } from './DOM_Elements/elements_registration.js';
@@ -81,15 +82,19 @@ if(postForm){
 
 // * Função que impede outros usuarios de acessar a página de criação de posts
 
-export async function protegerPaginaAdmin() {
-    const usuario = await initAuth()
-    const roleId = usuario?.objeto?.role_id
-
-    if( roleId !== 2){
-        return false
+async function verificarPermissaoUsuario() {
+    try {
+        if(document.readyState === 'loading'){
+        document.addEventListener('DOMContentLoaded',protegerPaginaAdmin)
     }
-    return true
+    else{
+        protegerPaginaAdmin()
+    }
+    } 
+    catch (error) {
+        console.error(error)
+    }
+    
 }
 
-protegerPaginaAdmin()
 

@@ -1,4 +1,4 @@
-import { protegerPaginaAdmin } from './createPostUI.js';
+import { protegerPaginaAdmin } from '../middleware/protecaoLinks.js';
 import {createPost, getPosts, getPostName, getPostId} from '../api/posts.js'
 import {checkAuthStatus, isAdmin, fetchUserProfile, initAuth} from '../api/auth.js'
 import {getComment, createComment, deleteComment, editComment} from '../api/comments.js'
@@ -11,77 +11,7 @@ window.verPostUnico = verPostUnico
 window.voltarParaLista = voltarParaLista
 window.deleteComentario = deleteComentario
 document.addEventListener('DOMContentLoaded', inicializarPagina)
-
-if(postForm){
-    postForm.addEventListener('submit', async (event) => {
-    event.preventDefault();
-
-
-    const submitButton = postForm.querySelector('button[type="submit"]');
-    const originalButtonText = submitButton.innerHTML;
-
-    const titulo = document.getElementById('postTitle').value;
-    const conteudo = tinymce.get("postContent").getContent();
-     
-
-
-    try {
-        if (!conteudo || conteudo.trim() === "") {
-            alert("O conteúdo do post é obrigatório");
-        }
-        if (!titulo || titulo.trim() === "") {
-            alert("O título do post é obrigatório");
-            return;
-        }
-        submitButton.disabled = true;
-        submitButton.innerHTML = `
-            <span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
-            Publicando...
-        `;
-
-        // Preenche o timestamp automaticamente
-        document.getElementById('timestampField').value = new Date().toISOString();
-
-        const resposta = await createPost(titulo,conteudo)
-
-        if(!resposta){
-            exibirMensagem('Erro ao criar post', 'erro')
-        }
-
-        exibirMensagem('Post criado com sucesso', 'success')
-    }
-     
-    catch (error) {
-        console.error("Erro:", error);
-        exibirMensagem('Erro ao criar post', 'erro')
-    }
-    finally{
-        submitButton.disabled = false
-        submitButton.innerHTML = originalButtonText
-    }
-    
-});
-}
-
-// Validação visual do Bootstrap 
-(function() {
-    'use strict';
-    
-    // Obtém todos os formulários que precisam de validação customizada do Bootstrap
-    const forms = document.querySelectorAll('.needs-validation');
-    
-    // Loop e previne o envio padrão
-    Array.from(forms).forEach(form => {
-        form.addEventListener('submit', event => {
-            if (!form.checkValidity()) {
-                event.preventDefault();
-                event.stopPropagation();
-            }
-            
-            form.classList.add('was-validated');
-        }, false);
-    });
-})();
+//document.addEventListener('DOMContentLoaded',protegerPaginaAdmin)
 
 // ************** Mostrar Posts ****************
 
@@ -90,6 +20,9 @@ const container = document.getElementById('posts-container')
 // * função carrega os posts e injeta eles dentro de uma tag para deixar dinâmico
 async function exibirPosts(){
     try {
+        if(!container){
+            return
+        }
         // Mostra indicador de carregamento
         container.innerHTML = 
         `<div class="text-center">
@@ -139,7 +72,7 @@ async function exibirPosts(){
         container.innerHTML = postsHTML;
     } 
     catch (error) {
-        console.error('Erro ao exibir posts:', error);
+        //console.error('Erro ao exibir posts:', error);
         container.innerHTML = `
             <div class="alert alert-danger">
                 Erro ao carregar os posts. Tente novamente mais tarde.
@@ -165,67 +98,6 @@ function escapeHtml(texto) {
     return div.innerHTML;
 }
 
-// ************** Barra de Pesquisa ****************
-
-const barraPesquisa = document.getElementById('formBarraPesquisa')
-
-barraPesquisa.addEventListener('submit', async (event) => {
-    event.preventDefault()
-
-    const nomePost = document.getElementById('tituloPost').value
-    try {
-       
-        if ( !nomePost ||nomePost.trim() == ''){
-        alert("Digite alguma coisa antes de pesquisar");
-            return;
-    }
-    // * Feedback visual de carregamento
-        container.innerHTML = '<div class="text-center"><div class="spinner-border"></div></div>';
-
-        const resposta = await getPostName(nomePost)
-        
-        container.innerHTML = ''
-
-        // Caso o backend retorne null ou lista vazia
-
-        if(!resposta || (Array.isArray(resposta) && resposta.length === 0)){
-            container.innerHTML = '<div class="alert alert-warning">Nenhum post encontrado com esse título.</div>'
-            return
-        }
-        // *Se o backend retornar um array de resultados, tratamos como lista
-        // *Se retornar um único objeto, colocamos em um array para usar o forEach
-
-        const resultados = Array.isArray(resposta) ? resposta : [resposta];
-
-        resultados.forEach(post => {
-            const postHTML = `
-                <article class="card post-card mb-4 p-3 bg-white border-primary shadow-sm">
-                    <div class="card-body">
-                        <div class="d-flex justify-content-between">
-                            <span class="badge bg-info text-dark">Resultado da Busca</span>
-                            <small class="text-muted">ID: ${post.id}</small>
-                        </div>
-                        <h2 class="h4 card-title fw-bold mt-2">${escapeHtml(post.titulo)}</h2>
-                        <div class="card-text text-secondary">
-                            ${post.conteudo.substring(0, 200)}...
-                        </div>
-                        <div class="mt-3">
-                            <a href="visualizar_post.html?id=${post.id}" class="btn btn-primary btn-sm">Ver Post Completo</a>
-                            <button onclick="window.location.reload()" class="btn btn-link btn-sm text-secondary">Voltar para todos os posts</button>
-                        </div>
-                    </div>
-                </article>
-            `;
-            container.innerHTML += postHTML;
-        });
-    } 
-    catch (error) {
-        console.error('Erro na busca', error)
-        container.innerHTML = '<div class="alert alert-danger">Erro ao realizar a busca.</div>'
-    }
-    
-
-})
 
 
 // ************** Pegar um post pelo id ****************
@@ -234,6 +106,12 @@ async function inicializarPagina() {
 
     await initAuth()
 
+    if(document.readyState ==='loading'){
+        document.addEventListener('DOMContentLoaded',protegerPaginaAdmin)
+    }
+    else{
+        protegerPaginaAdmin()
+    }
     const params = new URLSearchParams(window.location.search)
     const post_id = params.get('id')
 
@@ -246,7 +124,7 @@ async function inicializarPagina() {
     }
 }
 
-async function verPostUnico(id) {
+export async function verPostUnico(id) {
     
     
 

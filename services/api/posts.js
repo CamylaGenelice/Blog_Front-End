@@ -28,7 +28,7 @@ export async function getPosts() {
 
 export async function getPostName(nome) {
     try {
-        const resposta = await fetch(`${CONFIG.API_BASE_URL}/post/pesquisar_post?titulo=${encodeURIComponent(nome)}`, {
+        const resposta = await fetch(`${CONFIG.API_BASE_URL}/post/pesquisar_post?titulo_post=${encodeURIComponent(nome)}`, {
             method: 'GET',
             headers: {'Content-Type': 'application/json'},
             
@@ -45,7 +45,6 @@ export async function getPostName(nome) {
     } 
     catch (error) {
         console.error('Erro: ',error)
-        throw error
     }
 }
 export async function getPostId(id) {
