@@ -1,20 +1,6 @@
 import { initAuth } from "../api/auth.js";
 
-export async function isAdmin() {
-    try {
-        const usuario = await initAuth();
-        const roleId = usuario?.objeto?.role_id;
 
-        if(roleId === 2){
-            return roleId
-        }
-        return false
-    } 
-    catch (error) {
-        console.error('Erro ao verificar permissões:', error);
-        return false;
-    }
-}
 export async function protegerPaginaAdmin() {
     try {
         const usuario = await initAuth()
@@ -33,10 +19,20 @@ export async function protegerPaginaAdmin() {
     }
 }
 
+// * Utilizar na página de criar post.  Caso não tenha nenhuma verificação de permissão de usuario.
 export async function redirecionamento() {
-    const admin = await isAdmin()
 
-    if(!admin){
-        window.location.href = 'home.html'
+    try {
+        const usuario = await initAuth();
+        const roleId = usuario?.objeto?.role_id;
+
+        if(roleId !== 2){
+            window.location.href = 'home.html'
     }
+        return true
+    } 
+    catch (error) {
+        console.error(error)
+    }
+    
 }

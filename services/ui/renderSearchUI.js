@@ -30,9 +30,13 @@ async function carregarResultado() {
                 return
             }
         }
+        else {
+            container.innerHTML = '<p>Nenhum termo de busca informado.</p>';
+            return;
+        }
     }
     const posts = JSON.parse(resultados)
-    termoEl.textContent = sessionStorage.getItem('ultimoTermoBusca') || '';
+    termoElement.textContent = sessionStorage.getItem('ultimoTermoBusca') || '';
 
     if (!posts.length) {
         container.innerHTML = '<p>Nenhum post encontrado.</p>';
@@ -63,4 +67,4 @@ async function carregarResultado() {
     sessionStorage.removeItem('ultimoTermoBusca');
 }
 
-document.addEventListener('DOMContentLoaded', carregarResultados)
+document.addEventListener('DOMContentLoaded', carregarResultado)
