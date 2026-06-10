@@ -15,7 +15,7 @@
 <body>
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
         <div class="container">
-            <a class="navbar-brand fw-bold" href="#">BlogDev</a>
+            <a class="navbar-brand fw-bold" href="home.html">BlogDev</a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
                 <span class="navbar-toggler-icon"></span>
             </button>
@@ -23,7 +23,7 @@
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav me-auto">
                     <li class="nav-item">
-                        <a class="nav-link" href="#">Home</a>
+                        <a class="nav-link" href="home.html">Home</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="exibir_posts.html">Artigos</a>
@@ -48,9 +48,18 @@
     </nav>
     <main class="d-flex flex-column min-vh-100 my-5">
        <div id="container-resultados" class="container ">
-            <h2 class="mb-4">Post:</h2>
+            
             <div id="lista-posts"></div>
+
+            <hr class="my-5">
+            <section id="secao-comentarios" class="mt-5">
+                <h4>Cometários</h4>
+                <div id="formulario-comentario-container" class="mb-4"></div>
+                <div id="lista-comentarios"></div>
+                <div id="mensagem"></div>
+            </section>
         </div> 
+        
     </main>
     <footer class="bg-dark text-white text-center py-4 mt-auto">
         <div class="container">

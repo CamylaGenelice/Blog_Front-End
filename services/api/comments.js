@@ -102,7 +102,7 @@ export async function editComment(id, texto) {
     }
 }
 
-export async function getComment(post_id) {
+export async function getComments(post_id) {
     try {
         
         const requisicao = await fetch (`${CONFIG.API_BASE_URL}/comments/posts/${post_id}/comments`,{

@@ -1,7 +1,7 @@
 import { protegerPaginaAdmin } from '../middleware/protecaoLinks.js';
 import {createPost, getPosts, getPostName, getPostId} from '../api/posts.js'
 import {checkAuthStatus, isAdmin, fetchUserProfile, initAuth} from '../api/auth.js'
-import {getComment, createComment, deleteComment, editComment} from '../api/comments.js'
+import {getComments, createComment, deleteComment, editComment} from '../api/comments.js'
 import { exibirMensagem } from './DOM_Elements/elements_registration.js';
 
 const postForm = document.getElementById('postForm')
@@ -147,7 +147,7 @@ export async function verPostUnico(id) {
         // 3. Renderiza o conteúdo completo
         conteudoDiv.innerHTML = `
             <article>
-                <h1 class="display-4 fw-bold">${escapeHtml(post.titulo)}</h1>
+                <h3 class="display-4 fw-bold">${escapeHtml(post.titulo)}</h3>
                 <p class="text-muted">Publicado em: ${new Date(post.created_at).toLocaleDateString('pt-BR')}</p>
                 <hr>
                 <div class="mt-4 fs-5">
@@ -201,7 +201,7 @@ async function carregarComentarios(post_id) {
         }
 
         // 2. Busca os comentários
-        const resposta = await getComment(post_id);
+        const resposta = await getComments(post_id);
         
         
         let comentarios = [];
