@@ -10,6 +10,19 @@
     
     <!-- Bootstrap Icons (opcional, para ícones visuais) -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+
+    <style>
+        html,body{
+            height: 100%;
+        }
+        body{
+            display: flex;
+            flex-direction: column;
+        }
+        main{
+            flex:1
+        }
+    </style>
 </head>
 <body class="bg-light py-5">
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
@@ -69,7 +82,7 @@
                                     class="form-control form-control-lg" 
                                     id="postTitle" 
                                     name="title" 
-                                    placeholder="Digite um título atraente..." 
+                                    placeholder="Digite um título..." 
                                     required
                                 >
                                 <div class="invalid-feedback">
@@ -80,7 +93,7 @@
                         
                             
 
-                            <!-- Editor Rico (TinyMCE) -->
+                            <!-- Editor (TinyMCE) -->
                             <div class="mb-4">
                                 <label class="form-label fw-semibold">
                                     Conteúdo <span class="text-danger">*</span>
@@ -116,15 +129,15 @@
 
                             <!-- Imagem Destacada (URL) -->
                             <div class="mb-5">
-                                <label for="postImage" class="form-label fw-semibold">Imagem Destacada (URL)</label>
+                                <label for="postImage" class="form-label fw-semibold">Imagem Destacada</label>
                                 <input 
-                                    type="url" 
+                                    type="file" 
                                     class="form-control" 
-                                    id="postImage" 
+                                    id="inputImagem" 
                                     name="featured_image" 
-                                    placeholder="https://exemplo.com/imagem.jpg"
-                                >
-                                <div class="form-text">Cole o link da imagem principal do post.</div>
+                                    accept="image/png, image/jpeg, image/webp"
+                                    placeholder="imagem"  >
+                                <div class="form-text">Escolha a imagem.</div>
                             </div>
 
                             

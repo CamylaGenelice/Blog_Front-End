@@ -2,8 +2,7 @@ import {isAdmin, checkAuthStatus, initAuth} from "./auth.js";
 
 const CONFIG = {
     API_BASE_URL: 'http://127.0.0.1:8000',  // Altere para a URL do seu backend
-    POST_ID_TO_DISPLAY: 4,                  // ID do post que será exibido na home
-    MAX_RECENT_POSTS: 5, 
+    
 }
 
 export async function getPosts() {
@@ -77,7 +76,7 @@ export async function getPostId(id) {
     }
 }
 
-export async function createPost(titulo, texto) {
+export async function createPost(titulo, conteudo, imagem) {
     try {
         const admin = await initAuth()
         const role_id = admin?.objeto?.role_id
@@ -85,13 +84,17 @@ export async function createPost(titulo, texto) {
         if(role_id !== 2 || !role_id){
             throw new Error('Usuario não tem autorização')
         }
+        const formData = new FormData()
+        formData.append('titulo', titulo)
+        formData.append('conteudo', conteudo)
+        if(imagem){
+            formData.append('imagem', imagem)
+        }
+        
         
         const requisicao = await fetch(`${CONFIG.API_BASE_URL}/post/criar_post`, {
             method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',     
-            },
-            body: JSON.stringify({titulo,texto}),
+            body: formData,
             credentials: 'include', 
         });
         // Captura o erro do servidor
@@ -108,24 +111,16 @@ export async function createPost(titulo, texto) {
     }
 }
 
-export async function editPost(titulo,texto) {
+export async function editPost(post_id,titulo,texto) {
     try {
 
-        const params = new URLSearchParams(window.location.search)
-        const post_id = params.get('id')
-
-        const admin = isAdmin()
-
-        if (!admin){
-            throw new Error('Admin é false')
-        }
-        const requisicao = await fetch(`${CONFIG.API_BASE_URL}/post/editar_post`, {
-            method: 'POST',
+        const requisicao = await fetch(`${CONFIG.API_BASE_URL}/post/${post_id}/editar_post`, {
+            method: 'PUT',
             headers: {
                 'Content-Type': 'application/json',     
             },
             credentials: 'include', 
-            body: JSON.stringify(post_id,titulo,texto)
+            body: JSON.stringify({titulo,texto})
         });
 
         if (!requisicao.ok) {
@@ -141,28 +136,23 @@ export async function editPost(titulo,texto) {
     }
 }
 
-export async function deletePost() {
+export async function deletePost(post_id) {
     try {
-        const params = new URLSearchParams(window.location.search)
-        const post_id = params.get('id')
         
-        const admin = isAdmin()
-        if(!admin){
-            throw new Error('Admin é false')
-        }
-        const requisicao = await fetch(`${CONFIG.API_BASE_URL}/post/deletar_post`,{
+        const requisicao = await fetch(`${CONFIG.API_BASE_URL}/post/${post_id}/deletar_post`,{
             method: 'DELETE',
             headers: {
                 'Content-Type': 'application/json'
             },
             credentials: 'include',
-            body: JSON.stringify(post_id)
+            body: JSON.stringify({post_id})
         })
         if (!requisicao.ok){
             const erro = await requisicao.json()
             throw new Error (`Erro: ${JSON.stringify(erro)}`);
         }
-        return console.log('Post deletado com sucesso')
+        const dadosConvertidos = await requisicao.json()
+        return dadosConvertidos
     } 
     catch (error) {
         console.error('Erro ao deletar:', error)

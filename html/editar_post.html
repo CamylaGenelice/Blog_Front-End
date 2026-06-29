@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <title>Edição de Post</title>
+
+    <style>
+        .hero-section {
+            padding: 100px 0;
+            background-color: #f8f9fa;
+        }
+        .dropdown:hover .dropdown-menu{
+            display: block;
+            margin-top: 0;
+        }
+        html, body{
+            height: 100%;
+        }
+        body{
+            display: flex;
+            flex-direction: column;
+        }
+        main{
+            flex: 1;
+        }
+    </style>
+</head>
+<body>
+    
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <div class="container">
+            <a class="navbar-brand fw-bold" href="#">BlogDev</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav me-auto">
+                    <li class="nav-item">
+                        <a class="nav-link " href="home.html">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="exibir_posts.html">Artigos</a>
+                    </li>
+                    <li id="criarPost" data-role-admin="true" class="nav-item dropdown">
+                        <a class="nav-link active dropdown-toggle" href="#" id="menuDropdown" role="button">Admin</a>
+                        <ul class="dropdown-menu" aria-labelledby="menuDropdown">
+                            <li><a class="dropdown-item" href="create_posts.html">Criar Post</a></li>
+                            <li><a class="dropdown-item" href="editar_post.html">Editar Post</a></li>
+                        </ul>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">Contato</a>
+                    </li>
+                </ul>
+                
+                <form id="formBarraPesquisa" class="d-flex" role="search">
+                    <div id="container"></div>
+                    <input id="tituloPost" class="form-control me-2" type="search" placeholder="Pesquisar no blog..." aria-label="Search">
+                    <button class="btn btn-outline-light" type="submit">Buscar</button>
+                    <button class="ms-2 btn btn-outline-light" type="submit"><a class="nav-link" href="cadastro.html">Cadastro</a></button>
+                    <button class="ms-2 btn btn-outline-light" type="submit"><a class="nav-link" href="login.html">Login</a></button>
+                </form>
+            </div>
+        </div>
+    </nav>
+
+    <main class="container my-4">
+        
+        <div class="mt-5" id="posts-container-wrapper">
+            <div class="row justify-content-center">
+                <div class="col-lg-9" id="posts-container">
+                </div>
+            </div>
+        </div>
+        
+        <form class="needs-validation d-none" id="formulario" action="" method="put">
+            <div class="mb-4">
+                <label for="postTitulo" class="form-label fw-semibold">Título do Post <span class="text-danger">*</span></label>
+                <input 
+                type="text"
+                class="form-control form-control-lg"
+                id="postTitulo"
+                name="title"
+                placeholder="Digite um título..." 
+                required
+                >
+
+                <div class="invalid-feedback">
+                    Por favor, insira um título para o post.
+                </div>
+            </div>
+            
+            <div class="mb-4">
+                <label for="" class="form-label fw-semibold">Conteúdo <span class="text-danger">*</span></label>
+
+                <textarea id="postContent" name="content"></textarea>
+            </div>
+
+            <!-- Imagem Destacada (URL) -->
+            <div class="mb-5">
+                <label for="postImage" class="form-label fw-semibold">Imagem Destacada</label>
+                <input 
+                    type="file" 
+                    class="form-control" 
+                    id="inputImagem" 
+                    name="featured_image" 
+                    accept="image/png, image/jpeg, image/webp"
+                    placeholder="imagem"  >
+                <div class="form-text">Escolha a imagem.</div>
+            </div>
+
+           <!-- Botões de Ação -->
+            <div class="d-flex flex-wrap gap-2 justify-content-end border-top pt-4">
+                <button type="button" class="btn btn-outline-secondary btn-lg px-4" onclick="window.location.href='/'">
+                    <i class="bi bi-x-circle me-1"></i> Cancelar
+                </button>
+                                
+                                <!--BOTÃO DE ENVIAR -->
+                <button type="submit" class="btn btn-primary btn-lg px-5">
+                    <i class="bi bi-check2-circle me-1"></i> 
+                      Publicar
+                </button>
+            </div>
+        </form>
+        
+    </main>
+
+    <footer class="bg-dark text-white text-center py-4">
+        <p>&copy; 2026 BlogDev - Todos os direitos reservados.</p>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script type="module" src="../services/ui/editPostUI.js"></script>
+    <script type="module" src="../services/main.js"></script>
+
+    <script src="https://cdn.tiny.cloud/1/hqa23x7fa1cromgdydl5f2ljfmwsncj3oi4t4b66a5nah4t2/tinymce/6/tinymce.min.js" referrerpolicy="origin" ></script>
+    <!-- Inicialização do TinyMCE (Configuração Básica) -->
+    <script>
+        tinymce.init({
+            selector: '#postContent',
+            height: 450,
+            menubar: true,
+            plugins: [
+                'advlist', 'autolink', 'lists', 'link', 'image', 'charmap', 'preview',
+                'anchor', 'searchreplace', 'visualblocks', 'code', 'fullscreen',
+                'insertdatetime', 'media', 'table', 'help', 'wordcount'
+            ],
+            toolbar: 'undo redo | blocks | ' +
+                'bold italic forecolor backcolor | alignleft aligncenter ' +
+                'alignright alignjustify | bullist numlist outdent indent | ' +
+                'link image media | removeformat | help',
+            content_style: 'body { font-family:Helvetica,Arial,sans-serif; font-size:16px }',
+            language: 'pt_BR',
+            language_url: 'https://cdn.tiny.cloud/1/no-api-key/tinymce/6/langs/pt_BR.js', // Tradução PT-BR
+            setup: function (editor) {
+                editor.on('change', function () {
+                    // Atualiza o textarea original para validação HTML5 e captura de dados
+                    tinymce.triggerSave();
+                });
+            }
+        });
+
+       
+    </script>
+</body>
+</html>

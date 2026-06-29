@@ -1,9 +1,18 @@
+
 import { getPostName } from "../api/posts.js";
+import { carregarComentarios, configurarFormularioComentario, deleteComentario } from "./commentsUI.js";
+
+window.deleteComentario = deleteComentario
 
 function escapeHtml(texto) {
     const div = document.createElement('div');
     div.textContent = texto;
     return div.innerHTML;
+}
+
+function inicializarComentarios(post_id) {
+    carregarComentarios(post_id)
+    configurarFormularioComentario(post_id)
 }
 
 async function carregarResultado() {
@@ -43,7 +52,11 @@ async function carregarResultado() {
         return;
     }
 
-    container.innerHTML = posts.map(post => `
+    container.innerHTML = posts.map(post => {
+        const tagImagem = post.caminho_imagem 
+        ? `<img src="http://127.0.0.1:8000/static/${post.caminho_imagem}" class="img-fluid rounded mb-3" alt="${escapeHtml(post.titulo)}" style="max-height: 250px; object-fit: cover; width: 100%;">`
+        : ''; // Se não tiver, fica vazio
+        return`
         <article class="card mb-4 p-3">
             <h3 class="h5">${escapeHtml(post.titulo)}</h3>
             <div class="text-secondary">${post.conteudo.substring(0, 150)}...</div>
@@ -51,7 +64,7 @@ async function carregarResultado() {
                 Ler post completo →
             </button>
         </article>
-    `).join('');
+    `}).join(''); 
 
      // Adiciona eventos para cada botão (envia post único para post.html)
     document.querySelectorAll('[data-post]').forEach(btn => {

@@ -15,12 +15,14 @@ if(postForm){
 
     const titulo = document.getElementById('postTitle').value;
     const conteudo = tinymce.get("postContent").getContent();
-     
+    const inputImagem = document.getElementById('inputImagem')
+    const arquivoImagem = inputImagem.files.length > 0 ? inputImagem.files[0] : null
+
 
 
     try {
+
         await initAuth()
-        
         
         
         if (!conteudo || conteudo.trim() === "") {
@@ -39,18 +41,15 @@ if(postForm){
         // Preenche o timestamp automaticamente
         // document.getElementById('timestampField').value = new Date().toISOString();
 
-        const resposta = await createPost(titulo,conteudo)
-
-        if(!resposta){
-           return false
-        }
-        return {msg: 'Post criado com sucesso'}
+        const resposta = await createPost(titulo,conteudo, arquivoImagem)
+        alert('Post criado com sucesso!')
+        postForm.reset()
         
     }
      
     catch (error) {
         console.error("Erro:", error);
-        
+        alert('Falha ao criar post')
     }
     finally{
         submitButton.disabled = false
