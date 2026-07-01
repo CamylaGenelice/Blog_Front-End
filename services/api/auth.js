@@ -1,5 +1,5 @@
 const CONFIG = {
-    API_BASE_URL: 'http://127.0.0.1:8000',  // Altere para a URL do seu backend
+    API_BASE_URL: 'https://meu-blog-kappa.vercel.app/',  // Altere para a URL do seu backend
     POST_ID_TO_DISPLAY: 4,                  // ID do post que será exibido na home
     MAX_RECENT_POSTS: 5, 
 }

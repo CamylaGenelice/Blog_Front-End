@@ -1,7 +1,7 @@
 import {isAdmin, checkAuthStatus, initAuth} from "./auth.js";
 
 const CONFIG = {
-    API_BASE_URL: 'http://127.0.0.1:8000',  // Altere para a URL do seu backend
+    API_BASE_URL: 'https://meu-blog-kappa.vercel.app/',  // Altere para a URL do seu backend
     
 }
 
