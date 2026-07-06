@@ -143,7 +143,7 @@ export async function verPostUnico(id) {
         const post = await getPostId(id)
         
         const imagemCapa = post.imagem_nome_arquivo 
-            ? `<img src="http://127.0.0.1:8000/static/${post.imagem_nome_arquivo}" 
+            ? `<img src="${post.imagem_nome_arquivo}" 
                     class="img-fluid rounded mb-4 w-100" 
                     alt="${escapeHtml(post.titulo)}" 
                     style="max-height: 1000px; object-fit: cover;">`

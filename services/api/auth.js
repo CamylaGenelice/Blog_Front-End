@@ -1,8 +1,4 @@
-const CONFIG = {
-    API_BASE_URL: 'https://meu-blog-kappa.vercel.app/',  // Altere para a URL do seu backend
-    POST_ID_TO_DISPLAY: 4,                  // ID do post que será exibido na home
-    MAX_RECENT_POSTS: 5, 
-}
+import { API_URL } from "../../config.js";
 
 let userCache = null
 let authInitialized = false
@@ -11,7 +7,7 @@ export async function initAuth() {
     if(authInitialized) return userCache
 
     try {
-        const res = await fetch(`${CONFIG.API_BASE_URL}/auth/me`, {
+        const res = await fetch(`${API_URL}/auth/me`, {
             method: 'GET',
             credentials: 'include'
         });
@@ -40,7 +36,7 @@ export async function loginUser(username, password) {
        formData.append('username', username);
        formData.append('password', password);
 
-        const resposta = await fetch(`${CONFIG.API_BASE_URL}/auth/login`, {
+        const resposta = await fetch(`${API_URL}/auth/login`, {
             method: 'POST',
             headers:  {'Content-Type': 'application/x-www-form-urlencoded'},
             body: formData, 
@@ -72,7 +68,7 @@ export async function registrationUser(nome,email,senha) {
             nome, email, senha
         }
         
-        const requisicao = await fetch(`${CONFIG.API_BASE_URL}/auth/cadastro`, {
+        const requisicao = await fetch(`${API_URL}/auth/cadastro`, {
             method: 'POST',
             headers: {'Content-Type': 'application/json'},
             body: JSON.stringify(payload), 
@@ -104,7 +100,7 @@ export async function checkAuthStatus() {
 // *Função que roda assim que o site carrega, pegando as informações do usuario. Vai servir para personalizar os botões do site, se estiver logado pode fazer comentarios, se não estiver não aparece a opção
 export async function fetchUserProfile() {
     try {
-        const resposta = await fetch(`${CONFIG.API_BASE_URL}/auth/me`, {
+        const resposta = await fetch(`${API_URL}/auth/me`, {
             method: 'GET',
             credentials: 'include'
         })
@@ -137,7 +133,7 @@ export function isAdmin() {
 
 export async function logout(){
    try {
-        const resposta = await fetch(`${CONFIG.API_BASE_URL}/auth/logout`, {
+        const resposta = await fetch(`${API_URL}/auth/logout`, {
             method: 'POST',
             credentials: 'include'
         });

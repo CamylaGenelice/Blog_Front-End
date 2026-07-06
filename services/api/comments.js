@@ -1,10 +1,6 @@
 import { isAdmin, checkAuthStatus } from "./auth.js"
+import { API_URL } from "../../config";
 
-const CONFIG = {
-    API_BASE_URL: 'https://meu-blog-kappa.vercel.app/',  // Altere para a URL do seu backend
-    POST_ID_TO_DISPLAY: 4,                  // ID do post que será exibido na home
-    MAX_RECENT_POSTS: 5, 
-}
 
 export async function createComment(texto,post_id) {
     try {
@@ -15,7 +11,7 @@ export async function createComment(texto,post_id) {
             throw new Error('Usuario não esta autenticado ')
         }
         
-        const requisicao = await fetch (`${CONFIG.API_BASE_URL}/comments/posts/${post_id}/comments/`,{
+        const requisicao = await fetch (`${API_URL}/comments/posts/${post_id}/comments/`,{
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -49,7 +45,7 @@ export async function deleteComment(comment_id, post_id) {
         }
         
 
-        const requisicao = await fetch (`${CONFIG.API_BASE_URL}/comments/comments/${comment_id}?post_id=${post_id}`,{
+        const requisicao = await fetch (`${API_URL}/comments/comments/${comment_id}?post_id=${post_id}`,{
             method: 'DELETE',
             headers: {
                 'Content-Type': 'application/json'
@@ -81,7 +77,7 @@ export async function editComment(id, texto) {
         formData.append('id',id)
         formData.append('texto',texto)
 
-        const requisicao = await fetch (`${CONFIG.API_BASE_URL}/comments/edit`,{
+        const requisicao = await fetch (`${API_URL}/comments/edit`,{
             method: 'POST',
             headers: {'Content-Type': 'application/json'},
             credentials: 'include',
@@ -105,7 +101,7 @@ export async function editComment(id, texto) {
 export async function getComments(post_id) {
     try {
         
-        const requisicao = await fetch (`${CONFIG.API_BASE_URL}/comments/posts/${post_id}/comments`,{
+        const requisicao = await fetch (`${API_URL}/comments/posts/${post_id}/comments`,{
             method: 'GET',
             headers: {'Content-Type': 'application/json'},
             credentials: 'include',

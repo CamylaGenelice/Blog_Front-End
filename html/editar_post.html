@@ -138,7 +138,9 @@
 
     <script src="https://cdn.tiny.cloud/1/hqa23x7fa1cromgdydl5f2ljfmwsncj3oi4t4b66a5nah4t2/tinymce/6/tinymce.min.js" referrerpolicy="origin" ></script>
     <!-- Inicialização do TinyMCE (Configuração Básica) -->
-    <script>
+     <script type="module" src="../config.js"></script>
+    <script type="module">
+        import {API_URL} from '../config.js'
         tinymce.init({
             selector: '#postContent',
             height: 450,
@@ -155,6 +157,29 @@
             content_style: 'body { font-family:Helvetica,Arial,sans-serif; font-size:16px }',
             language: 'pt_BR',
             language_url: 'https://cdn.tiny.cloud/1/no-api-key/tinymce/6/langs/pt_BR.js', // Tradução PT-BR
+            images_upload_handler: function (blobInfo, progress){
+              
+                return new Promise((resolve, reject) => {
+                const formData = new FormData()
+                formData.append('file', blobInfo.blob(), blobInfo.filename());
+
+                fetch(`${API_URL}/upload`,{
+                    method: 'POST',
+                    body: formData
+               })
+               }).then(response => {
+                if(!response.ok){
+                    throw new Error('Erro ao fazer o upload no servidor back-end.')
+                }
+                return response.json()
+               }).then(result => {
+                // result.url contém o link público gerado pelo Supabase Storage
+                resolve(result.url)
+               }).catch(error => {
+                reject('Falha no upload: ',error.message)
+               })
+               
+            },
             setup: function (editor) {
                 editor.on('change', function () {
                     // Atualiza o textarea original para validação HTML5 e captura de dados

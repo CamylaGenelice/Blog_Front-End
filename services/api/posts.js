@@ -1,13 +1,10 @@
 import {isAdmin, checkAuthStatus, initAuth} from "./auth.js";
+import { API_URL } from "../../config";
 
-const CONFIG = {
-    API_BASE_URL: 'https://meu-blog-kappa.vercel.app/',  // Altere para a URL do seu backend
-    
-}
 
 export async function getPosts() {
     try {
-        const response = await fetch(`${CONFIG.API_BASE_URL}/post/posts`,{
+        const response = await fetch(`${API_URL}/post/posts`,{
             method: 'GET',
             headers: {'Content-Type': 'application/json'}
         })
@@ -27,7 +24,7 @@ export async function getPosts() {
 
 export async function getPostName(nome) {
     try {
-        const resposta = await fetch(`${CONFIG.API_BASE_URL}/post/pesquisar_post?titulo_post=${encodeURIComponent(nome)}`, {
+        const resposta = await fetch(`${API_URL}/post/pesquisar_post?titulo_post=${encodeURIComponent(nome)}`, {
             method: 'GET',
             headers: {'Content-Type': 'application/json'},
             
@@ -56,7 +53,7 @@ export async function getPostId(id) {
         }
 
 
-        const resposta = await fetch(`${CONFIG.API_BASE_URL}/post/${id}`, {
+        const resposta = await fetch(`${API_URL}/post/${id}`, {
             method: 'POST',
             headers: {'Content-Type': 'application/json'},
             body: JSON.stringify(id)
@@ -92,7 +89,7 @@ export async function createPost(titulo, conteudo, imagem) {
         }
         
         
-        const requisicao = await fetch(`${CONFIG.API_BASE_URL}/post/criar_post`, {
+        const requisicao = await fetch(`${API_URL}/post/criar_post`, {
             method: 'POST',
             body: formData,
             credentials: 'include', 
@@ -114,7 +111,7 @@ export async function createPost(titulo, conteudo, imagem) {
 export async function editPost(post_id,titulo,texto) {
     try {
 
-        const requisicao = await fetch(`${CONFIG.API_BASE_URL}/post/${post_id}/editar_post`, {
+        const requisicao = await fetch(`${API_URL}/post/${post_id}/editar_post`, {
             method: 'PUT',
             headers: {
                 'Content-Type': 'application/json',     
@@ -139,7 +136,7 @@ export async function editPost(post_id,titulo,texto) {
 export async function deletePost(post_id) {
     try {
         
-        const requisicao = await fetch(`${CONFIG.API_BASE_URL}/post/${post_id}/deletar_post`,{
+        const requisicao = await fetch(`${API_URL}/post/${post_id}/deletar_post`,{
             method: 'DELETE',
             headers: {
                 'Content-Type': 'application/json'
